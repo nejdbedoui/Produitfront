@@ -20,9 +20,10 @@ import {
   NbToastrModule,
   NbWindowModule,
 } from '@nebular/theme';
+import { AjouterCommandeComponent } from './ajouter-commande/ajouter-commande.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, AjouterCommandeComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

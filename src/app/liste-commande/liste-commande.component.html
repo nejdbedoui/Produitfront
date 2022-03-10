@@ -1,0 +1,81 @@
+<nb-card>
+    <nb-card-body>
+
+        
+
+        <button nbButton status="danger" (click)="Add()"><nb-icon icon="plus"></nb-icon></button>  
+        <div *ngIf="active">
+            <form #updateForm="ngForm" #taskNewForm="ngForm" (ngSubmit)="onSubmit();">
+                <table>
+                    <tr>
+                        <td>        <nb-select fullWidth placeholder="Select type" name="id_client" #id_client="ngModel"
+                            [(ngModel)]="commande.type">
+                            <nb-option value="Fournisseur">Fournisseur </nb-option>
+                            <nb-option value="Centrale">Centrale </nb-option>
+
+
+                        </nb-select>                       </td>
+                        <td colspan="3">        <input type="text" [(ngModel)]="commande.nom_fournisseur" name="Fournisseur" nbInput placeholder="Initial width" fullWidth *ngIf="commande.type=='Fournisseur'">                        </td>
+                    </tr>
+                    <tr *ngFor="let ligne of commande.liste_p; let i = index">
+                        <td><input #autoInput
+                            nbInput
+                            type="text"
+                            name="Ligne{{i}}"
+                            (input)="onChange()"
+                            placeholder="Produit"
+                            [nbAutocomplete]="auto" [(ngModel)]="ligne.produit.nomProduit"/>
+                      
+                          <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)">
+                      
+                            <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">
+                              {{ option }}
+                            </nb-option>
+                      
+                          </nb-autocomplete></td>
+                        <td colspan="2"><input type="text" nbInput placeholder="Quantité" name="Qte{{i}}" [(ngModel)]="ligne.quantite"></td>
+                        <td><button nbButton type="button" (click)="dynamic('add')"><nb-icon icon="plus"></nb-icon></button> </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2"><button nbButton type="submit" status="primary">Enregistrer</button></td>
+
+                        
+                    </tr>
+                </table>
+              </form>
+            
+                    </div>
+            
+
+      <label class="search-label" for="search">Search:</label>
+      <input nbInput [nbFilterInput]="dataSource" id="search" class="search-input">
+  
+      <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+  
+        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+  
+        <ng-container [nbTreeGridColumnDef]="customColumn">
+          <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
+            {{customColumn}}
+          </th>
+          <td nbTreeGridCell *nbTreeGridCellDef="let row">
+            <nb-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></nb-fs-icon>
+            {{row.data[customColumn]}}
+          </td>
+        </ng-container>
+  
+        <ng-container *ngFor="let column of defaultColumns; let index = index"
+                      [nbTreeGridColumnDef]="column"
+                      [showOn]="getShowOn(index)">
+          <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+            {{column}}
+          </th>
+          <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+        </ng-container>
+  
+      </table>
+  
+    </nb-card-body>
+  </nb-card>
