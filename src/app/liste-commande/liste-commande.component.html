@@ -46,36 +46,45 @@
               </form>
             
                     </div>
+
+                    <form>
+                        <div class="mb-3 row">
+                          <label for="table-filtering-search" class="col-xs-3 col-sm-auto col-form-label">Full text search:</label>
+                          <div class="col-xs-3 col-sm-auto">
+                            <input id="table-filtering-search" class="form-control" type="text" [formControl]="ffilter">
+                          </div>
+                        </div>
+                      </form>
+                    <table class="table table-striped">
+                      <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Area</th>
+                        <th scope="col">Population</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                          
+                        <tr *ngFor="let c of commandes$ | async; index as i">
+                        <th scope="row">{{ i + 1 }}</th>
+                        <ngb-highlight [result]="c.name" [term]="ffilter.value"></ngb-highlight>
+                        <td>{{ c.type }}</td>
+                        <td>{{ c.nom_fournisseur}}</td>
+                        <td><button type="button" nbButton status="info" (click)="expand()" >Details</button></td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+
+
+
+
+                    
             
 
-      <label class="search-label" for="search">Search:</label>
-      <input nbInput [nbFilterInput]="dataSource" id="search" class="search-input">
-  
-      <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
-  
-        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
-  
-        <ng-container [nbTreeGridColumnDef]="customColumn">
-          <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
-            {{customColumn}}
-          </th>
-          <td nbTreeGridCell *nbTreeGridCellDef="let row">
-            <nb-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></nb-fs-icon>
-            {{row.data[customColumn]}}
-          </td>
-        </ng-container>
-  
-        <ng-container *ngFor="let column of defaultColumns; let index = index"
-                      [nbTreeGridColumnDef]="column"
-                      [showOn]="getShowOn(index)">
-          <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
-            {{column}}
-          </th>
-          <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-        </ng-container>
-  
-      </table>
+      
   
     </nb-card-body>
   </nb-card>

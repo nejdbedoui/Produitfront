@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Commande } from '../Models/Commande';
 import { Produit } from '../Models/Produit';
 
 @Injectable({
@@ -21,5 +22,8 @@ export class CommandeService {
     AddC(c){
       console.log(c);
       return this._http.post(`${this.urlC}/AddCommande`,c);
+    }
+    getAllC(){
+      return this._http.get<Commande[]>(`${this.urlC}/GetCommande`);
     }
 }
