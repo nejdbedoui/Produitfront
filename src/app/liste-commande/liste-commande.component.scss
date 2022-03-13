@@ -6,7 +6,11 @@ button[nbTreeGridRowToggle] {
   th, td {
     padding: 10px;
   }
-  table { empty-cells: show; }
+  table { empty-cells: show; 
+    width: 100%;
+  }
+  
+  
 
   
   .search-label {
@@ -45,5 +49,6 @@ button[nbTreeGridRowToggle] {
       width: 23%;
     }
   }
-
+  
+  
   

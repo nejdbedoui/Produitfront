@@ -21,6 +21,7 @@ import {
   NbWindowModule,
 } from '@nebular/theme';
 import { AjouterCommandeComponent } from './ajouter-commande/ajouter-commande.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AppComponent, AjouterCommandeComponent],
@@ -40,6 +41,7 @@ import { AjouterCommandeComponent } from './ajouter-commande/ajouter-commande.co
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
+    NgbModule,
   ],
   bootstrap: [AppComponent],
 })

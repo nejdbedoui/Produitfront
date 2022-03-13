@@ -1,6 +1,6 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit, PipeTransform, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -16,7 +16,12 @@ import { CommandeService } from '../service/commande.service';
 })
 export class ListeCommandeComponent implements OnInit {
   commandes$: Observable<Commande[]>;
-  ffilter = new FormControl('');
+  filtrer = new FormGroup({
+    Cherch: new FormControl('')
+  });
+  datedeb:Date;
+  datefin:Date;
+  typeSel:string;
 
   options: string[];
   filteredOptions$: Observable<string[]>;
@@ -36,6 +41,7 @@ export class ListeCommandeComponent implements OnInit {
   
   constructor( private Cservice: CommandeService, private pipe: DecimalPipe) {
     this.commande = new Commande(null,new Date(),this.DetailsCommande,null,null,null);
+    this.typeSel='Default';
    }
 
   ngOnInit(): void {
@@ -80,15 +86,52 @@ this.Cservice.getallP().subscribe(value=>{
   getAllC(){
     this.Cservice.getAllC().subscribe(value=>{
       this.commandes=value;
+      this.Ffiltrer('Default');
+      console.log(this.commandes)
+  });
+}
 
-      this.commandes$ = this.ffilter.valueChanges.pipe(
-        startWith(''),
-        map(text => this.search(text, this.pipe))
-      );
-  
-    })
-  }
+Ffiltrer(value){
+  this.commandes$ = this.filtrer.get('Cherch').valueChanges.pipe(
+    startWith(''),
+    map(text => this.search(text,value))
+  );
+  if(this.datedeb!=null || this.datefin!=null)
+  this.filterDate();
 
+}
+filterDate(){
+if(this.datedeb!=null&&this.datefin==null){
+  this.commandes$=this.commandes$.pipe (
+    map(items => 
+     items.filter(item => new Date(item.date) > this.datedeb)) );  
+     
+}else if(this.datedeb==null&&this.datefin!=null){
+  this.commandes$=this.commandes$.pipe (
+    map(items => 
+     items.filter(item => new Date(item.date) < this.datefin)) );
+}
+else if(this.datedeb!=null&&this.datefin!=null){
+  this.commandes$=this.commandes$.pipe (
+    map(items => 
+     items.filter(item => new Date(item.date) > this.datedeb && new Date(item.date) < this.datefin )) );
+}
+else
+this.Ffiltrer(this.typeSel);
+}
+
+
+
+
+  applySelect(value){
+    console.log(this.datedeb)
+    if(value=='Fournisseur')
+      this.Ffiltrer('Fournisseur');  
+  else if(value=='Centrale')
+  this.Ffiltrer('Centrale');  
+  else
+  this.Ffiltrer('Default');
+}
   Add(){
     this.active=!this.active;
     console.log(this.commandes)
@@ -101,10 +144,17 @@ this.Cservice.getallP().subscribe(value=>{
     this.expanded=!this.expanded;
   }
 
-   search(text: string, pipe: PipeTransform): Commande[] {
+   search(text: string, type='Default'): Commande[] {
     return this.commandes.filter(country => {
       const term = text.toLowerCase();
-      return country.type.toLowerCase().includes(term);
+      if(type=='Default'){
+      return country.id_commande.toLowerCase().includes(term);
+      }
+      else{
+        return country.id_commande.toLowerCase().includes(term)&&country.type==type;
+      }
+      
+
     });
   }
 }

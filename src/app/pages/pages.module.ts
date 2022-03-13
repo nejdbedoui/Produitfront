@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbAccordionModule, NbAutocompleteModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbListModule, NbMenuModule, NbProgressBarModule, NbSelectModule, NbTabsetModule, NbTreeGridModule, NbUserModule } from '@nebular/theme';
+import { NbAccordionModule, NbAutocompleteModule, NbButtonModule, NbCardModule, NbDatepickerModule, NbIconModule, NbInputModule, NbListModule, NbMenuModule, NbProgressBarModule, NbSelectModule, NbTabsetModule, NbTreeGridModule, NbUserModule } from '@nebular/theme';
 
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
@@ -13,6 +13,7 @@ import { ChartModule } from 'angular2-chartjs';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbHighlight, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -42,7 +43,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     NbAccordionModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbTypeaheadModule,
+    NbDatepickerModule
 
   ],
   declarations: [

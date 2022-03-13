@@ -8,5 +8,6 @@ export class Commande{
         public statut: string,
         public type: string,
         public nom_fournisseur: string,
+        public toggle=false
     ){}
 }
