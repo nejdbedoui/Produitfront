@@ -1,0 +1,129 @@
+<nb-card>
+  <nb-card-body>
+    <nb-tabset>
+      <nb-tab tabTitle="Critére de Recherche">
+
+              <!-- Critére de recherche -->
+
+              <table style="width: 70%;">
+                <tr>
+                  <td>
+                    <input nbInput placeholder="Date Debut" [nbDatepicker]="ngmodel" [(ngModel)]="datedeb">
+        <nb-datepicker #ngmodel></nb-datepicker>
+                  </td>
+                  <td><input nbInput placeholder="Date Fin" [nbDatepicker]="formcontrol" [(ngModel)]="datefin">
+                    <nb-datepicker #formcontrol></nb-datepicker></td>
+
+                    <td><button type="button" (click)="filterDate()"nbButton status="primary">Recherche Par Date</button>                   </td>
+                </tr>
+                <tr >
+                  <td><nb-select fullWidth placeholder="Select type" (ngModelChange)="applySelect($event)" name="id_client" #id_client="ngModel"
+                    [(ngModel)]="typeSel">
+                    <nb-option value="Default">Default </nb-option>
+                    <nb-option value="Fournisseur">Fournisseur </nb-option>
+                    <nb-option value="Centrale">Centrale </nb-option>
+                  </nb-select></td>
+                  <td>
+                    <form [formGroup]="filtrer">
+                          <input nbInput  type="text" formControlName="Cherch" placeholder="Recherche par ID">
+                    </form>
+                  </td>
+                </tr>
+              </table>
+              <!-- End -->
+
+      </nb-tab>
+      <nb-tab tabTitle="Ajouter une commande">
+        <form #updateForm="ngForm" #taskNewForm="ngForm" (ngSubmit)="onSubmit();">
+          <table style="width: 70%;">
+            <tr>
+              <td>
+                <nb-select fullWidth placeholder="Select type" name="id_client" #id_client="ngModel"
+                  [(ngModel)]="commande.type">
+                  <nb-option value="Fournisseur">Fournisseur </nb-option>
+                  <nb-option value="Centrale">Centrale </nb-option>
+
+
+                </nb-select>
+              </td>
+              <td colspan="3"> <input type="text" [(ngModel)]="commande.nom_fournisseur" name="Fournisseur" nbInput
+                  placeholder="Initial width" fullWidth *ngIf="commande.type=='Fournisseur'"> </td>
+            </tr>
+            <tr *ngFor="let ligne of commande.liste_p; let i = index">
+              <td><input #autoInput nbInput type="text" name="Ligne{{i}}" (input)="onChange()" placeholder="Produit"
+                  [nbAutocomplete]="auto" [(ngModel)]="ligne.produit.nomProduit" />
+
+                <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)">
+
+                  <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">
+                    {{ option }}
+                  </nb-option>
+
+                </nb-autocomplete>
+              </td>
+              <td colspan="2"><input type="text" nbInput placeholder="Quantité" name="Qte{{i}}"
+                  [(ngModel)]="ligne.quantite"></td>
+              <td><button nbButton type="button" (click)="dynamic('add')" status="warning" *ngIf="i==0">
+                  <nb-icon icon="plus"></nb-icon>
+                </button> </td>
+                <td><button nbButton type="button" (click)="dynamic()"status="danger" *ngIf="i==0">
+                  <nb-icon icon="minus"></nb-icon>
+                </button> </td>
+            </tr>
+            <tr>
+              <td colspan="2"></td>
+              <td colspan="2"><button nbButton type="submit" status="primary">Enregistrer</button></td>
+
+
+            </tr>
+          </table>
+        </form>
+      </nb-tab>
+    </nb-tabset>
+
+    <!-- Table d'affichage-->
+
+    <table class="table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col" class="ID">ID</th>
+          <th scope="col" class="date">Date du commande</th>
+          <th scope="col" class="type">Type</th>
+          <th scope="col" class="status">Status</th>
+          <th scope="col" class="action">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr *ngFor="let c of commandes$ | async; index as i">
+          <th scope="row">{{ i + 1 }}</th>
+          <td [attr.colspan]="c.toggle ? '2' : ''">
+            <div>
+              <ngb-highlight [result]="c.id_commande" [term]="filtrer.get('Cherch').value"></ngb-highlight>
+            </div>
+            <div *ngIf="c.toggle" class="expanded-panel">
+            <br/>
+              <div class="table-container">
+                <table class="table-striped">
+                  <tr class="header-row">
+                    <th class="header">Produit</th>
+                    <th class="header">Quantité</th>
+                  </tr>
+                  <tr class="table-row" *ngFor="let p of c.liste_p">
+                    <td class="cell">{{p.produit.nomProduit}}</td>
+                    <td class="cell">{{p.quantite}}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </td>
+          <td *ngIf="!c.toggle">{{ c.date | date:'mediumDate'}}</td>
+          <td>{{ c.type}}</td>
+          <td>{{ c.status}}</td>
+          <td><button type="button" nbButton status="info" (click)="c.toggle = !c.toggle">Details</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </nb-card-body>
+</nb-card>
